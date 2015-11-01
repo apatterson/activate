@@ -67,6 +67,7 @@ public class FullscreenActivity extends AppCompatActivity {
         wv.setInitialScale(100);
         WebSettings ws = wv.getSettings();
         ws.setJavaScriptEnabled(true);
+        wv.addJavascriptInterface(new WebAppInterface(this), "Android");
     }
 
     @Override
