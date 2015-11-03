@@ -1,12 +1,15 @@
 package ie.endaten.activate;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -44,7 +47,6 @@ public class FullscreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fullscreen);
 
         mVisible = true;
-        mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
 
 
@@ -62,12 +64,20 @@ public class FullscreenActivity extends AppCompatActivity {
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
 
-        WebView wv = (WebView) findViewById(R.id.fullscreen_content);
-        wv.loadUrl("file:///android_asset/index.html");
+        final WebView wv = (WebView) findViewById(R.id.fullscreen_content);
+        wv.loadUrl("file:///android_asset/index.html#2");
         wv.setInitialScale(100);
         WebSettings ws = wv.getSettings();
         ws.setJavaScriptEnabled(true);
-        wv.addJavascriptInterface(new WebAppInterface(this), "Android");
+        final WebAppInterface wai = new WebAppInterface(this);
+        wv.addJavascriptInterface(wai, "Android");
+        View.OnClickListener mReset = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                wv.loadUrl("file:///android_asset/index.html#" + 4);
+            }
+        };
+        findViewById(R.id.dummy_button).setOnClickListener(mReset);
     }
 
     @Override
@@ -109,7 +119,6 @@ public class FullscreenActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-        mControlsView.setVisibility(View.GONE);
         mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
