@@ -14,9 +14,9 @@
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
 
-    <Button android:id="@+id/dummy_button" style="?metaButtonBarButtonStyle"
+    <Spinner android:id="@+id/dummy_button" style="?metaButtonBarButtonStyle"
         android:layout_width="fill_parent" android:layout_height="wrap_content"
         android:text="@string/dummy_button"
-        android:layout_gravity="right|bottom" />
+        android:layout_gravity="end|bottom" />
 
 </FrameLayout>

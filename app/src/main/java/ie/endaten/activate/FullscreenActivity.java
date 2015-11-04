@@ -2,6 +2,7 @@ package ie.endaten.activate;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,9 @@ import android.view.View;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -39,6 +43,7 @@ public class FullscreenActivity extends AppCompatActivity {
     private View mContentView;
     private View mControlsView;
     private boolean mVisible;
+    private AdapterView.OnItemSelectedListener mSpinnerActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +76,27 @@ public class FullscreenActivity extends AppCompatActivity {
         ws.setJavaScriptEnabled(true);
         final WebAppInterface wai = new WebAppInterface(this);
         wv.addJavascriptInterface(wai, "Android");
-        View.OnClickListener mReset = new View.OnClickListener() {
+        class SpinnerActivity extends Activity implements AdapterView.OnItemSelectedListener {
+
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                String file = "file:///android_asset/index.html#" + (pos + 1);
+                wv.loadUrl(file);
+                wv.loadUrl(file);
+            }
+
             @Override
-            public void onClick(View view) {
-                wv.loadUrl("file:///android_asset/index.html#" + 4);
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         };
-        findViewById(R.id.dummy_button).setOnClickListener(mReset);
+        Spinner spinner = (Spinner) findViewById(R.id.dummy_button);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.levels_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        mSpinnerActivity = new SpinnerActivity();
+        spinner.setOnItemSelectedListener(mSpinnerActivity);
     }
 
     @Override
